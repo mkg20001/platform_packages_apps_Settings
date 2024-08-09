@@ -130,6 +130,7 @@ import com.android.settings.applications.AppStatePowerBridge;
 import com.android.settings.applications.AppStateTurnScreenOnBridge;
 import com.android.settings.applications.AppStateUsageBridge;
 import com.android.settings.applications.AppStateUsageBridge.UsageState;
+import com.android.settings.applications.AppStateUserTrustedSourceBridge;
 import com.android.settings.applications.AppStateWriteSettingsBridge;
 import com.android.settings.applications.AppStorageSettings;
 import com.android.settings.applications.UsageAccessDetails;
@@ -270,6 +271,7 @@ public class ManageApplications extends InstrumentedFragment
     public static final int LIST_TYPE_NFC_TAG_APPS = 18;
     public static final int LIST_TYPE_TURN_SCREEN_ON = 19;
     public static final int LIST_TYPE_USER_ASPECT_RATIO_APPS = 20;
+    public static final int LIST_TYPE_USER_TRUSTED_SOURCE = 21;
 
     // List types that should show instant apps.
     public static final Set<Integer> LIST_TYPES_WITH_INSTANT = new ArraySet<>(Arrays.asList(
@@ -1270,6 +1272,8 @@ public class ManageApplications extends InstrumentedFragment
                         manageApplications.mNotificationBackend);
             } else if (mManageApplications.mListType == LIST_TYPE_USAGE_ACCESS) {
                 mExtraInfoBridge = new AppStateUsageBridge(mContext, mState, this);
+            } else if (mManageApplications.mListType == LIST_TYPE_USER_TRUSTED_SOURCE) {
+                mExtraInfoBridge = new AppStateUserTrustedSourceBridge(mContext, mState, this);
             } else if (mManageApplications.mListType == LIST_TYPE_HIGH_POWER) {
                 mBackend.refreshList();
                 mExtraInfoBridge = new AppStatePowerBridge(mContext, mState, this);

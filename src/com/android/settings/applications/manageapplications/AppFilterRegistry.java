@@ -32,6 +32,7 @@ import com.android.settings.applications.AppStateOverlayBridge;
 import com.android.settings.applications.AppStatePowerBridge;
 import com.android.settings.applications.AppStateTurnScreenOnBridge;
 import com.android.settings.applications.AppStateUsageBridge;
+import com.android.settings.applications.AppStateUserTrustedSourceBridge;
 import com.android.settings.applications.AppStateWriteSettingsBridge;
 import com.android.settings.nfc.AppStateNfcTagAppsBridge;
 import com.android.settings.wifi.AppStateChangeWifiStateBridge;
@@ -101,7 +102,8 @@ public class AppFilterRegistry {
     public static final int FILTER_APPS_CLONE = 25;
     public static final int FILTER_APPS_NFC_TAG = 26;
     public static final int FILTER_APPS_TURN_SCREEN_ON = 27;
-    private static final int NUM_FILTER_ENTRIES = 28;
+    public static final int FILTER_APPS_USER_TRUSTED_SOURCE = 28;
+    private static final int NUM_FILTER_ENTRIES = 29;
     // Next id: 28. If you add an entry here, please change NUM_FILTER_ENTRIES.
 
     private static AppFilterRegistry sRegistry;
@@ -179,6 +181,12 @@ public class AppFilterRegistry {
         mFilters[FILTER_APPS_USAGE_ACCESS] = new AppFilterItem(
                 AppStateUsageBridge.FILTER_APP_USAGE,
                 FILTER_APPS_USAGE_ACCESS,
+                R.string.filter_all_apps);
+
+        // Usage access screen, never displayed.
+        mFilters[FILTER_APPS_USER_TRUSTED_SOURCE] = new AppFilterItem(
+                AppStateUserTrustedSourceBridge.FILTER_APP_USER_TRUSTED_SOURCE,
+                FILTER_APPS_USER_TRUSTED_SOURCE,
                 R.string.filter_all_apps);
 
         // Apps that can draw overlays
