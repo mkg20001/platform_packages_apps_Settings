@@ -12347,7 +12347,7 @@
     <!-- Title for toggle if user wants to force 5G [CHAR LIMIT=40] -->
     <string name="force_5g_title">Force 5G</string>
     <!-- Title for toggle if user wants to force 5G [CHAR LIMIT=NONE] -->
-    <string name="force_5g_summary">Force 5G. This can be used to allow unoffical 5G connectivity on some providers with this phone. Note that this may not work.</string>
+    <string name="force_5g_summary">If enabled, will force 5G on this SIM even if not officially supported with this phone and carrier combination.</string>
 
     <!-- Title for toggle if user wants to require cellular encryption [CHAR LIMIT=40] -->
     <string name="require_cellular_encryption_title">Require encryption</string>

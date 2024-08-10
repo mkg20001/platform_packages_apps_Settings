@@ -476,8 +476,8 @@ public class EnabledNetworkModePreferenceController extends
             // TODO: force 5g here by adding NR flag to raf
             long raf = mTelephonyManager.getAllowedNetworkTypesForReason(
                     TelephonyManager.ALLOWED_NETWORK_TYPES_REASON_USER);
-            boolean force5g = Settings.Global.getInt(mContext.getContentResolver(),
-                    Settings.Global.MOBILE_DATA_FORCE_5G, 0);
+            final boolean force5g = Settings.Global.getInt(mContext.getContentResolver(),
+                    Settings.Global.MOBILE_DATA_FORCE_5G, 0) == 1;
             if (force5g) {
                 raf = raf | RAF_NR;
             }

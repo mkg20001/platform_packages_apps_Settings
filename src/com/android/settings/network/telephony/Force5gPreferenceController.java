@@ -15,7 +15,6 @@
  */
 package com.android.settings.network.telephony;
 
-import android.app.settings.SettingsEnums;
 import android.content.Context;
 import android.os.PersistableBundle;
 import android.provider.Settings;
@@ -29,8 +28,6 @@ import android.util.Log;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
 
-import com.android.settings.R;
-import com.android.settings.flags.Flags;
 import com.android.settings.network.CarrierConfigCache;
 import com.android.settings.network.SubscriptionUtil;
 import com.android.settings.overlay.FeatureFactory;
@@ -53,7 +50,7 @@ import com.android.settingslib.core.instrumentation.MetricsFeatureProvider;
  */
 public class Force5gPreferenceController extends TelephonyTogglePreferenceController {
 
-    private static final String LOG_TAG = "Enable2gPreferenceController";
+    private static final String LOG_TAG = "Force5gPreferenceController";
     private static final long BITMASK_5G = TelephonyManager.NETWORK_TYPE_BITMASK_NR;
 
     private final MetricsFeatureProvider mMetricsFeatureProvider;
@@ -87,6 +84,12 @@ public class Force5gPreferenceController extends TelephonyTogglePreferenceContro
         mSubId = subId;
         mTelephonyManager = mContext.getSystemService(TelephonyManager.class)
                 .createForSubscriptionId(mSubId);
+
+        PersistableBundle carrierConfig = getCarrierConfigForSubId(subId);
+        if (carrierConfig == null) {
+            return this;
+        }
+
         return this;
     }
 
@@ -181,19 +184,20 @@ public class Force5gPreferenceController extends TelephonyTogglePreferenceContro
      */
     @Override
     public boolean isChecked() {
-        // If an enterprise admin has disabled 2g, we show the toggle as not checked to avoid
-        // user confusion of seeing a checked toggle, but having 2g actually disabled.
+        // If an enterprise admin has disabled 5g, we show the toggle as not checked to avoid
+        // user confusion of seeing a checked toggle, but having 5g actually disabled.
         // The RestrictedSwitchPreference will take care of transparently informing the user that
         // the setting was disabled by their admin
         if (isDisabledByAdmin()) {
             return false;
         }
 
-        /* long currentlyAllowedNetworkTypes = mTelephonyManager.getAllowedNetworkTypesForReason(
-                mTelephonyManager.ALLOWED_NETWORK_TYPES_REASON_ENABLE_2G);
-        return (currentlyAllowedNetworkTypes & BITMASK_2G) != 0; */
-        return Settings.Global.getInt(mContext.getContentResolver(),
-                Settings.Global.MOBILE_DATA_FORCE_5G, 0);
+        /* final boolean force5G = Settings.Global.getInt(mContext.getContentResolver(),
+                Settings.Global.MOBILE_DATA_FORCE_5G, 0) != 0; */
+
+        long currentlyAllowedNetworkTypes = mTelephonyManager.getAllowedNetworkTypesForReason(
+                mTelephonyManager.ALLOWED_NETWORK_TYPES_REASON_USER);
+        return (currentlyAllowedNetworkTypes & BITMASK_5G) != 0 && mCarrierConfigCache.getConfig().getBoolean(CarrierConfigManager.KEY_FORCE_5G_BOOL);
     }
 
     /**
@@ -209,13 +213,22 @@ public class Force5gPreferenceController extends TelephonyTogglePreferenceContro
      */
     @Override
     public boolean setChecked(boolean isChecked) {
+        Log.i(LOG_TAG, "5g setchecked");
+
         if (isDisabledByAdmin()) {
             return false;
         }
 
-        if (!SubscriptionManager.isUsableSubscriptionId(mSubId)) {
+        Log.i(LOG_TAG, "5g setchecked2 " + mSubId);
+
+        // fails here
+        /* if (!SubscriptionManager.isUsableSubscriptionId(mSubId)) {
             return false;
-        }
+        } */
+
+        mCarrierConfigCache.getConfig().putBoolean(CarrierConfigManager.KEY_FORCE_5G_BOOL, isChecked);
+
+        Log.i(LOG_TAG, "5g setchecked3");
 
         long currentlyAllowedNetworkTypes = mTelephonyManager.getAllowedNetworkTypesForReason(
                 mTelephonyManager.ALLOWED_NETWORK_TYPES_REASON_USER);
@@ -236,8 +249,9 @@ public class Force5gPreferenceController extends TelephonyTogglePreferenceContro
         /* mMetricsFeatureProvider.action(
                 mContext, SettingsEnums.ACTION_2G_ENABLED, isChecked); */
 
+        // TODO: use subscription context
         Settings.Global.putInt(mContext.getContentResolver(),
-                Settings.Global.MOBILE_DATA_FORCE_5G, isChecked);
+                Settings.Global.MOBILE_DATA_FORCE_5G, isChecked ? 1 : 0);
 
         return true;
     }
