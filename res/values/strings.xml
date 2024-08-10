@@ -12344,6 +12344,11 @@
     <!-- Title for if toggle access is disabled by carrier [CHAR LIMIT=NONE] -->
     <string name="enable_2g_summary_disabled_carrier"><xliff:g id="carrier_name_2g" example="Google Fi">%1$s</xliff:g> requires 2G to be available</string>
 
+    <!-- Title for toggle if user wants to force 5G [CHAR LIMIT=40] -->
+    <string name="force_5g_title">Force 5G</string>
+    <!-- Title for toggle if user wants to force 5G [CHAR LIMIT=NONE] -->
+    <string name="force_5g_summary">Force 5G. This can be used to allow unoffical 5G connectivity on some providers with this phone. Note that this may not work.</string>
+
     <!-- Title for toggle if user wants to require cellular encryption [CHAR LIMIT=40] -->
     <string name="require_cellular_encryption_title">Require encryption</string>
     <!-- Summary for if the user wants to require cellular encryption [CHAR LIMIT=NONE] -->

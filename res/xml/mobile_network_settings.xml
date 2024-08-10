@@ -287,6 +287,14 @@
             settings:useAdminDisabledSummary="true"
             settings:userRestriction="no_cellular_2g"/>
 
+        <com.android.settingslib.RestrictedSwitchPreference
+            android:key="force_5g"
+            android:title="@string/force_5g_title"
+            android:summary="@string/force_5g_summary"
+            settings:controller="com.android.settings.network.telephony.Force5gPreferenceController"
+            settings:useAdminDisabledSummary="true"
+            settings:userRestriction="no_force_5g"/>
+
         <SwitchPreferenceCompat
             android:key="require_cellular_encryption"
             android:title="@string/require_cellular_encryption_title"

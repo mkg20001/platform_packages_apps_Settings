@@ -16,6 +16,8 @@
 
 package com.android.settings.network.telephony;
 
+import static android.telephony.RadioAccessFamily.RAF_NR;
+
 import static androidx.lifecycle.Lifecycle.Event.ON_START;
 import static androidx.lifecycle.Lifecycle.Event.ON_STOP;
 
@@ -23,6 +25,7 @@ import static com.android.settings.network.telephony.EnabledNetworkModePreferenc
 
 import android.content.Context;
 import android.os.PersistableBundle;
+import android.provider.Settings;
 import android.telephony.CarrierConfigManager;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
@@ -470,9 +473,16 @@ public class EnabledNetworkModePreferenceController extends
         }
 
         private int getPreferredNetworkMode() {
+            // TODO: force 5g here by adding NR flag to raf
+            long raf = mTelephonyManager.getAllowedNetworkTypesForReason(
+                    TelephonyManager.ALLOWED_NETWORK_TYPES_REASON_USER);
+            boolean force5g = Settings.Global.getInt(mContext.getContentResolver(),
+                    Settings.Global.MOBILE_DATA_FORCE_5G, 0);
+            if (force5g) {
+                raf = raf | RAF_NR;
+            }
             int networkMode = MobileNetworkUtils.getNetworkTypeFromRaf(
-                    (int) mTelephonyManager.getAllowedNetworkTypesForReason(
-                            TelephonyManager.ALLOWED_NETWORK_TYPES_REASON_USER));
+                    (int) raf);
             if (!showNrList()) {
                 Log.d(LOG_TAG, "Network mode :" + networkMode + " reduce NR");
                 networkMode = reduceNrToLteNetworkType(networkMode);
